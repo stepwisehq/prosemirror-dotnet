@@ -35,12 +35,17 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    AbsolutePath NugetDirectory => RootDirectory / "nuget";
+    AbsolutePath SourceDirectory => RootDirectory / "src";
+    AbsolutePath NugetDirectory => RootDirectory / "artifacts";
 
     Target Clean => _ => _
         .Before(Restore)
         .Executes(() =>
         {
+            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+            NugetDirectory.DeleteDirectory();
+            DotNetClean(_ => _
+                .SetProject(Solution.StepWise_ProseMirror));
         });
 
     Target Restore => _ => _
@@ -66,8 +71,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTest(_ => _
-                .SetConfiguration(Configuration.Debug)
-                .EnableNoRestore());
+                .SetConfiguration(Configuration.Debug));
         });
 
     Target Pack => _ => _
@@ -83,7 +87,7 @@ class Build : NukeBuild
         });
 
     Target Push => _ => _
-        .DependsOn(Pack, Test)
+        .DependsOn(Clean, Pack, Test)
         .Requires(() => Configuration.Equals(Configuration.Release))
         .Executes(() =>
         {
@@ -93,6 +97,7 @@ class Build : NukeBuild
                {
                    DotNetNuGetPush(s => s
                        .SetTargetPath(x)
+                       .SetApiKey(NugetApiKey)
                     //    .SetSource(NugetApiUrl)
                        .SetApiKey(NugetApiKey)
                    );
