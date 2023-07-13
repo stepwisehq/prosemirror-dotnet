@@ -18,10 +18,9 @@ name: nuke-build
 
 on:
   push:
-    branches:
-      - '*'
-    tags:
-      - '!v*'
+    branches-ignore:
+      - main
+      - 'release/*'
 
 jobs:
   ubuntu-latest:
