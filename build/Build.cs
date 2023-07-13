@@ -15,6 +15,8 @@ using static Nuke.Common.IO.Globbing;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using System.Collections.Generic;
+using Serilog;
 
 class Build : NukeBuild
 {
@@ -24,6 +26,12 @@ class Build : NukeBuild
     [GitVersion] readonly GitVersion GitVersion;
 
     [Parameter] [Secret] readonly string NugetApiKey;
+    [Parameter] static bool DryRun = true;
+
+    readonly string NugetApiUrl = DryRun ?
+        "https://apiint.nugettest.org/v3/index.json" :
+        "https://api.nuget.org/v3/index.json";
+
     /// Support plugins are available for:
     ///   - JetBrains ReSharper        https://nuke.build/resharper
     ///   - JetBrains Rider            https://nuke.build/rider
@@ -79,10 +87,15 @@ class Build : NukeBuild
         .Requires(() => Configuration.Equals(Configuration.Release))
         .Executes(() =>
         {
+            Log.Information($"Dry run: {DryRun}");
             DotNetPack(s => s
                 .SetProject(Solution.StepWise_ProseMirror)
                 .SetConfiguration(Configuration)
                 .SetVersion(GitVersion.NuGetVersionV2)
+                .SetProperties(new Dictionary<string, object>() {
+                    ["RepositoryCommit"] = GitVersion.Sha,
+                    ["RepositoryBranch"] = GitVersion.BranchName
+                })
                 .SetOutputDirectory("artifacts"));
         });
 
@@ -91,6 +104,7 @@ class Build : NukeBuild
         .Requires(() => Configuration.Equals(Configuration.Release))
         .Executes(() =>
         {
+            Log.Information($"Dry run: {DryRun}");
             GlobFiles(NugetDirectory, "*.nupkg")
                .Where(x => !x.EndsWith("symbols.nupkg"))
                .ForEach(x =>
@@ -98,7 +112,7 @@ class Build : NukeBuild
                    DotNetNuGetPush(s => s
                        .SetTargetPath(x)
                        .SetApiKey(NugetApiKey)
-                    //    .SetSource(NugetApiUrl)
+                       .SetSource(NugetApiUrl)
                        .SetApiKey(NugetApiKey)
                    );
                });
