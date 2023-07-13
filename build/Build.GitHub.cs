@@ -20,6 +20,7 @@ using Nuke.Common.Utilities;
     OnPushTags = new[] { "v*" },
     PublishArtifacts = false,
     FetchDepth = 0,
+    ImportSecrets = new[] { nameof(NugetApiKey), nameof(NugetApiIntKey) },
     InvokedTargets = new[] { nameof(Push)})
 ]
 partial class Build
