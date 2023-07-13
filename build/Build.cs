@@ -26,6 +26,7 @@ partial class Build : NukeBuild
     [GitVersion] readonly GitVersion GitVersion;
 
     [Parameter] [Secret] readonly string NugetApiKey;
+    [Parameter] [Secret] readonly string NugetApiIntKey;
     [Parameter] static bool DryRun = true;
 
     readonly string NugetApiUrl = DryRun ?
@@ -111,9 +112,8 @@ partial class Build : NukeBuild
                {
                    DotNetNuGetPush(s => s
                        .SetTargetPath(x)
-                       .SetApiKey(NugetApiKey)
+                       .SetApiKey(DryRun ? NugetApiIntKey : NugetApiKey)
                        .SetSource(NugetApiUrl)
-                       .SetApiKey(NugetApiKey)
                    );
                });
         });

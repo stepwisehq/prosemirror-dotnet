@@ -9,9 +9,19 @@ using Nuke.Common.Utilities;
     "nuke-build",
     GitHubActionsImage.UbuntuLatest,
     OnPushBranches = new[] { "*" },
+    OnPushTags = new[] { "!v*" },
     PublishArtifacts = false,
     FetchDepth = 0,
     InvokedTargets = new[] { nameof(Test)})
+]
+[GitHubActions(
+    "nuke-publish",
+    GitHubActionsImage.UbuntuLatest,
+    OnPushBranches = new[] { "*" },
+    OnPushTags = new[] { "v*" },
+    PublishArtifacts = false,
+    FetchDepth = 0,
+    InvokedTargets = new[] { nameof(Push)})
 ]
 partial class Build
 {
