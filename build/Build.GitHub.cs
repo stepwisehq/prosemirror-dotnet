@@ -8,8 +8,7 @@ using Nuke.Common.Utilities;
 [GitHubActions(
     "nuke-build",
     GitHubActionsImage.UbuntuLatest,
-    OnPushBranches = new[] { "*" },
-    OnPushTags = new[] { "!v*" },
+    OnPushBranchesIgnore = new[] { "main", "release/*" },
     PublishArtifacts = false,
     FetchDepth = 0,
     InvokedTargets = new[] { nameof(Test)})
