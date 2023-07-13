@@ -17,8 +17,8 @@ using Nuke.Common.Utilities;
 [GitHubActions(
     "nuke-publish",
     GitHubActionsImage.UbuntuLatest,
-    OnPushTags = new[] { "v*" },
-    PublishArtifacts = false,
+    OnPushBranches = new[] { "main", "release/*" },
+    PublishArtifacts = true,
     FetchDepth = 0,
     ImportSecrets = new[] { nameof(NugetApiKey), nameof(NugetApiIntKey) },
     InvokedTargets = new[] { nameof(Push)})
