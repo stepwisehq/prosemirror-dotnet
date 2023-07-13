@@ -92,11 +92,11 @@ partial class Build : NukeBuild
             DotNetPack(s => s
                 .SetProject(Solution.StepWise_ProseMirror)
                 .SetConfiguration(Configuration)
-                .SetVersion(GitVersion.NuGetVersionV2)
                 .SetProperties(new Dictionary<string, object>() {
                     ["RepositoryCommit"] = GitVersion.Sha,
                     ["RepositoryBranch"] = GitVersion.BranchName
                 })
+                .SetVersion(GitVersion.NuGetVersionV2)
                 .SetOutputDirectory("artifacts"));
         });
 
