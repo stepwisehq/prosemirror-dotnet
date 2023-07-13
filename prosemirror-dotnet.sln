@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StepWise.ProseMirror", "src\StepWise.ProseMirror.csproj", "{50A15793-6D6C-44A4-982B-86479DEDCDBB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{6313CA86-D82C-420E-BDD2-5967C2744516}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50A15793-6D6C-44A4-982B-86479DEDCDBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50A15793-6D6C-44A4-982B-86479DEDCDBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50A15793-6D6C-44A4-982B-86479DEDCDBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50A15793-6D6C-44A4-982B-86479DEDCDBB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {89FD4D4D-F3A7-4D5D-AAD0-586D14AAE4D5}
+	EndGlobalSection
+EndGlobal

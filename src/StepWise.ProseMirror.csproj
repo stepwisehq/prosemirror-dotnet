@@ -8,6 +8,7 @@
     <Version>0.1.0</Version>
     <Authors>ProTip</Authors>
     <Company>StepWise</Company>
+    <Description>ProseMirror for .NET</Description>
     <PackageProjectUrl>https://github.com/stepwisehq/prosemirror-dotnet</PackageProjectUrl>
     <RepositoryUrl>https://github.com/stepwisehq/prosemirror-dotnet.git</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -35,11 +36,11 @@
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <Compile Remove="**/*.Test.cs" />
-    <Compile Remove="src/Test/*" />
+    <Compile Remove="Test/*" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="LICENSE" Pack="true" PackagePath=""/>
-    <None Include="README.md" Pack="true" PackagePath=""/>
+    <None Include="../LICENSE" Pack="true" PackagePath=""/>
+    <None Include="../README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 </Project>
