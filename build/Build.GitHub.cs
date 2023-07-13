@@ -17,7 +17,6 @@ using Nuke.Common.Utilities;
 [GitHubActions(
     "nuke-publish",
     GitHubActionsImage.UbuntuLatest,
-    OnPushBranches = new[] { "*" },
     OnPushTags = new[] { "v*" },
     PublishArtifacts = false,
     FetchDepth = 0,
