@@ -10,6 +10,7 @@ using Nuke.Common.Utilities;
     GitHubActionsImage.UbuntuLatest,
     OnPushBranches = new[] { "*" },
     PublishArtifacts = false,
+    FetchDepth = 0,
     InvokedTargets = new[] { nameof(Test)})
 ]
 partial class Build
