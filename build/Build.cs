@@ -18,7 +18,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using System.Collections.Generic;
 using Serilog;
 
-class Build : NukeBuild
+partial class Build : NukeBuild
 {
     [Solution(GenerateProjects = true)]
     readonly Solution Solution;
