@@ -53,9 +53,29 @@ using static StepWise.Prose.TestBuilder.Builder;
 
 Node node = doc(p("Hello <a>"));
 
-var tr = new Transform.Transform(node);
+var tr = new Transform(node);
 
-tr.ReplaceWith(node.Tag()["a"],node.Tag()["a"],schema.Text("World"));
+tr.ReplaceWith(node.Tag()["a"], node.Tag()["a"], schema.Text("World"));
 
-Console.WriteLine(tr.Doc); // doc(paragraph("Hello World"))
+Console.WriteLine(tr.Doc.ToString()); // doc(paragraph("Hello World"))
+```
+
+### Deserializing Steps
+
+```csharp
+using StepWise.Prose.Model;
+using StepWise.Prose.TestBuilder;
+using StepWise.Prose.Transformation;
+
+using static StepWise.Prose.TestBuilder.Builder;
+
+Node node = doc(p("Hello <a>"));
+
+var stepJsonString = """{"stepType":"replace","from":7,"to":7,"slice":{"content":[{"type":"text","text":"World","marks":[]}]}}""";
+var step = Step.FromJSON(Builder.schema, StepDto.FromJson(stepJsonString));
+
+var tr = new Transform(node);
+tr.Step(step);
+
+Console.WriteLine(tr.Doc.ToString()); // doc(paragraph("Hello World"))
 ```
