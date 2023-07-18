@@ -79,3 +79,14 @@ tr.Step(step);
 
 Console.WriteLine(tr.Doc.ToString()); // doc(paragraph("Hello World"))
 ```
+
+### Deserializing Docs(Nodes)
+```csharp
+using StepWise.Prose.Model;
+using StepWise.Prose.TestBuilder;
+
+var docJsonString = """{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Hello World","marks":[]}],"marks":[]}],"marks":[]}""";
+var doc = Node.FromJSON(Builder.schema, NodeDto.FromJson(docJsonString));
+
+Console.WriteLine(doc.ToString()); // doc(paragraph("Hello World"))
+```
