@@ -16,13 +16,38 @@ A direct translation of the core ProseMirror packages from TypeScript to C#
 dotnet add package StepWise.ProseMirror
 ```
 
+### Basic Usage
+
+```csharp
+using StepWise.Prose.Model;
+
+var schemaSpec = new SchemaSpec() {
+	Nodes = new()
+	{
+		["doc"] = new() { Content = "paragraph+" },
+		["paragraph"] = new() { Content = "text*" },
+		["text"] = new() { }
+	},
+    Marks = new()
+};
+var schema = new Schema(schemaSpec);
+
+var doc = schema.Node("doc", null, new NodeList {
+	schema.Node("paragraph", null, new NodeList {
+		schema.Text("Hello World")
+	}, null)
+}, null);
+
+Console.WriteLine(doc.ToString()); // doc(paragraph("Hello World"))
+```
+
+
+### Test Builder & Transform
+
 ```csharp
 using StepWise.Prose.Model;
 using StepWise.Prose.TestBuilder;
 using StepWise.Prose.Transformation;
-
-
-namespace StepWise.Prose.Collab.Test;
 
 using static StepWise.Prose.TestBuilder.Builder;
 
