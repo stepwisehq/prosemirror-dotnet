@@ -381,6 +381,16 @@ public class TransformTest {
            doc(pre("hello world")),
             "code_block");
 
+    [Fact] public void Removes_non_allowed_nodes() =>
+      type(doc(p("<a>one", img(), "two", img(), "three")),
+           doc(pre("onetwothree")),
+           "code_block");
+
+    [Fact] public void Removes_newlines_in_non_code() =>
+      type(doc(pre("<a>one\ntwo\nthree")),
+           doc(p("one two three")),
+           "paragraph");
+
    [Fact] public void Only_Clears_Markup_When_Needed() =>
        type(doc(p("hello<a> ",em("world"))),
            doc(h1("hello<a> ",em("world"))),
