@@ -1,9 +1,14 @@
+using System.Text.RegularExpressions;
+
 using StepWise.Prose.Model;
 
 
 namespace StepWise.Prose.Transformation;
 
-public static class Mark {
+public static partial class Mark {
+    [GeneratedRegex(@"\r?\n|\r")]
+    private static partial Regex _NewLineRegex();
+
     public static void AddMark(Transform tr, int from, int to, Model.Mark mark) {
         List<Step> removed = new(), added = new();
         RemoveMarkStep? removing = null;
@@ -89,18 +94,28 @@ public static class Mark {
     public static void ClearIncompatible(Transform tr, int pos, NodeType parentType, ContentMatch? match = null) {
         match ??= parentType.ContentMatch;
         var node = tr.Doc.NodeAt(pos)!;
-        var delSteps = new List<Step>();
+        var replSteps = new List<Step>();
         var cur = pos + 1;
         for (var i = 0; i < node.ChildCount; i++) {
             var child = node.Child(i);
             var end = cur + child.NodeSize;
             var allowed = match.MatchType(child.Type);
             if (allowed is null) {
-                delSteps.Add(new ReplaceStep(cur, end, Slice.Empty));
+                replSteps.Add(new ReplaceStep(cur, end, Slice.Empty));
             } else {
                 match = allowed;
                 for (var j = 0; j < child.Marks.Count; j++) if (!parentType.AllowsMarkType(child.Marks[j].Type))
                     tr.Step(new RemoveMarkStep(cur, end, child.Marks[j]));
+
+                if (child.IsText && !(parentType.Spec.Code ?? false)) {
+                    var newLine = _NewLineRegex();
+                    Slice? slice = null;
+                    foreach (var m in newLine.Matches(child.Text!).ToList()) {
+                        slice ??= new Slice(Fragment.From(parentType.Schema.Text(" ", parentType.AllowedMarks(child.Marks))),
+                                            0, 0);
+                        replSteps.Add(new ReplaceStep(cur + m.Index, cur + m.Index + m.Groups[0].Length, slice));
+                    }
+                }
             }
             cur = end;
         }
@@ -108,6 +123,6 @@ public static class Mark {
             var fill = match.FillBefore(Fragment.Empty, true);
             tr.Replace(cur, cur, new Slice(fill!, 0, 0));
         }
-        for (var i = delSteps.Count - 1; i >= 0; i--) tr.Step(delSteps[i]);
+        for (var i = replSteps.Count - 1; i >= 0; i--) tr.Step(replSteps[i]);
     }
 }
