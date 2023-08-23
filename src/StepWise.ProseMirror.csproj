@@ -8,7 +8,7 @@
     <Version>0.1.0</Version>
     <Authors>ProTip</Authors>
     <Company>StepWise</Company>
-    <Description>ProseMirror for .NET</Description>
+    <Description>A direct translation of the core ProseMirror packages from TypeScript to C#</Description>
     <PackageProjectUrl>https://github.com/stepwisehq/prosemirror-dotnet</PackageProjectUrl>
     <RepositoryUrl>https://github.com/stepwisehq/prosemirror-dotnet.git</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
