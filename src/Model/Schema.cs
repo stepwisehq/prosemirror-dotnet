@@ -310,7 +310,7 @@ public class NodeSpec {
     public bool? Code { get; init; }
     public WhiteSpace? Whitespace { get; init; }
     public bool? DefiningAsContext { get; init; }
-    public bool? DefiningForContext { get; init; }
+    public bool? DefiningForContent { get; init; }
     public bool? Defining { get; init; }
     public bool? Isolating { get; init; }
 

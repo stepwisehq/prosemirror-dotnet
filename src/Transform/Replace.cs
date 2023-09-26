@@ -23,7 +23,7 @@ public static class Replace {
     }
 
     private static bool DefinesContent(NodeType type) =>
-        (type.Spec.Defining ?? false) || (type.Spec.DefiningForContext ?? false);
+        (type.Spec.Defining ?? false) || (type.Spec.DefiningForContent ?? false);
 
     public static Transform? ReplaceRange(Transform tr, int from, int to, Slice slice) {
         if (slice.Size == 0) return tr.Delete(from, to);
@@ -60,10 +60,10 @@ public static class Replace {
         }
 
         for (var d = preferredDepth - 1; d >= 0; d--) {
-            var type = leftNodes[d].Type;
-            var def = DefinesContent(type);
-            if (def && !ReferenceEquals(_from.Node(preferredTargetIndex).Type, type)) preferredDepth = d;
-            else if (def || !type.IsTextBlock) break;
+            var leftNode = leftNodes[d];
+            var def = DefinesContent(leftNode.Type);
+            if (def && !leftNode.SameMarkup(_from.Node(Math.Abs(preferredTarget) - 1))) preferredDepth = d;
+            else if (def || !leftNode.Type.IsTextBlock) break;
         }
 
         for (var j = slice.OpenStart; j >= 0; j--) {
@@ -449,7 +449,7 @@ file class Fitter {
     }
 
     public static bool? DefinesContent(NodeType type) {
-        return (type.Spec.Defining ?? false) || (type.Spec.DefiningForContext ?? false);
+        return (type.Spec.Defining ?? false) || (type.Spec.DefiningForContent ?? false);
     }
 
 
