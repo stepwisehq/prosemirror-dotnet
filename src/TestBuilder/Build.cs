@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 namespace StepWise.Prose.TestBuilder;
 
 using ChildSpec = OneOf<string, Node, MarkFlat>;
-using ChildSpec2 = OneOf<string, Node, MarkFlat, object>;
+using ChildSpec2 = OneOf<string, Node, List<Node>, MarkFlat, object>;
 using Tags = Dictionary<string, int>;
 
 
@@ -237,6 +237,7 @@ public static class Builder {
                 node.Switch(
                     str => _children.Add(str),
                     node => _children.Add(node),
+                    list => list.ForEach(n => _children.Add(n)),
                     flat => _children.Add(flat),
                     obj => suppliedAttrs = CreateAttrs(obj)
                 );
@@ -264,6 +265,7 @@ public static class Builder {
                 _node.Switch(
                     str => _children.Add(str),
                     node => _children.Add(node),
+                    list => list.ForEach(n => _children.Add(n)),
                     flat => _children.Add(flat),
                     obj => suppliedAttrs = CreateAttrs(obj)
                 );

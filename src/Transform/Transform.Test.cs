@@ -7,6 +7,7 @@ using Xunit.Abstractions;
 using StepWise.Prose.Collections;
 using StepWise.Prose.Model;
 using StepWise.Prose.TestBuilder;
+using DotNext.Collections.Generic;
 
 
 namespace StepWise.Prose.Transformation.Test;
@@ -800,10 +801,72 @@ public class TransformTest {
            doc(ul(li(p("<a>one")),li(p("two<b>")))),
            doc(ul(li(p("one")),li(p("twofoo")))));
 
+    [Fact]public void Keeps_Defining_Context_When_It_Doesnt_Matches_The_Parent_Markup() {
+        var spec = new NodeSpec() {
+            Content = "block+",
+            Group = "block",
+            DefiningForContent = true,
+            DefiningAsContext = false,
+            Attrs = new() {
+            ["color"] = new() {
+                Default = (JsonNode)"black"!,
+            },
+            },
+        };
+        var s = new Schema(new() {
+            Nodes = new OrderedDictionary<string, NodeSpec>(schema.Spec.Nodes) { ["blockquote"] = spec},
+            Marks = schema.Spec.Marks,
+        });
+        
+        var b = BuildersDynamic(s, new() {
+            ["b1"] = new { nodeType = "blockquote", color = "#100" },
+            ["b2"] = new { nodeType = "blockquote", color = "#200" },
+            ["b3"] = new { nodeType = "blockquote", color = "#300" },
+            ["b4"] = new { nodeType = "blockquote", color = "#400" },
+            ["b5"] = new { nodeType = "blockquote", color = "#500" },
+            ["b6"] = new { nodeType = "blockquote", color = "#600" },
+            ["p"] = new { nodeType = "paragraph" },
+            ["doc"] = new { nodeType = "doc" },
+        });
+
+        var b1 = b.b1;
+        var b2 = b.b2;
+        var b3 = b.b3;
+        var b4 = b.b4;
+        var b5 = b.b5;
+        var b6 = b.b6;
+        var p = b.p;
+        var doc = b.doc;
+
+        Node source = doc(b.b1(p("<a>b1")), b.b2(p("b2<b>")));
+
+        var before1 = doc(b3(p("b3")), b4(p("<a>")));
+        var before2 = doc(b5(p("b5")),b3(p("b3")), b4(p("<a>")));
+        var before3 = doc(b6(p("b6")), b5(p("b5")),b3(p("b3")), b4(p("<a>")));
+
+        var expect1 = doc(b3(p("b3")), b1(p("b1")), b2(p("b2")));
+        var expect2 = doc(b5(p("b5")), b3(p("b3")), b1(p("b1")), b2(p("b2")));
+        var expect3 = doc(b6(p("b6")), b5(p("b5")), b3(p("b3")), b1(p("b1")), b2(p("b2")));
+
+        replRange(before1, source, expect1);
+        replRange(before2, source, expect2);
+        replRange(before3, source, expect3);
+    }
+
    [Fact] public void Drops_Defining_Context_When_It_Matches_The_Parent_Structure() =>
       replRange(doc(blockquote(p("<a>"))),
            doc(blockquote(p("<a>one<b>"))),
            doc(blockquote(p("one"))));
+
+    [Fact] public void Drops_Defining_Context_When_It_Matches_The_Parent_Structure_In_A_Nested_Context() =>
+       repl(doc(ul(li(p("list1"), blockquote(p("<a>"))))),
+            doc(blockquote(p("<a>one<b>"))),
+            doc(ul(li(p("list1"), blockquote(p("one"))))));
+
+    [Fact] public void Drops_Defining_Context_When_It_Matches_The_Parent_Structure_In_A_Deep_Nested_Context() =>
+      repl(doc(ul(li(p("list1"), ul(li(p("list2"), blockquote(p("<a>"))))))),
+           doc(blockquote(p("<a>one<b>"))),
+           doc(ul(li(p("list1"), ul(li(p("list2"), blockquote(p("one"))))))));
 
    [Fact] public void Closes_Open_Nodes_At_The_Start() =>
       replRange(doc("<a>",p("abc"),"<b>"),
