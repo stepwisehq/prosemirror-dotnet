@@ -51,3 +51,43 @@ public record AttrStepDto : StepDto {
     public required string Attr { get; init; }
     public JsonNode? Value { get; init; }
 }
+
+public class DocAttrStep : Step {
+    public string Attr { get; }
+    public JsonNode? Value { get; }
+
+    public DocAttrStep(string attr, JsonNode? value) {
+        Attr = attr;
+        Value = value;
+    }
+
+    public override StepResult Apply(Node doc) {
+        var attrs = new Attrs(doc.Attrs) { [Attr] = Value };
+        var updated = doc.Type.Create(attrs, doc.Content, doc.Marks);
+        return StepResult.Ok(updated);
+    }
+
+    public override Step Invert(Node doc) {
+        return new DocAttrStep(Attr, doc.Attrs.GetValueOrDefault(Attr));
+    }
+
+    public override DocAttrStep? Map(IMappable mapping) {
+        return this;
+    }
+
+    public override DocAttrStepDto ToJSON() => new() {
+        Attr = Attr,
+        Value = Value
+    };
+
+    public static DocAttrStep FromJSON(Schema schema, DocAttrStepDto json) {
+        return new DocAttrStep(json.Attr, json.Value);
+    }
+}
+
+public record DocAttrStepDto : StepDto {
+    [JsonIgnore]
+    public override string StepType => "docAttr";
+    public required string Attr { get; init; }
+    public JsonNode? Value { get; init; }
+}

@@ -114,6 +114,11 @@ public class Transform {
         return this;
     }
 
+    public Transform SetDocAttribute(string attr, JsonNode? value) {
+        Step(new DocAttrStep(attr, value));
+        return this;
+    }
+
     public Transform AddNodeMark(int pos, Model.Mark mark) {
         Step(new AddNodeMarkStep(pos, mark));
         return this;

@@ -29,6 +29,7 @@ public abstract class Step {
             AddNodeMarkStepDto dto => AddNodeMarkStep.FromJSON(schema, dto),
             RemoveNodeMarkStepDto dto => RemoveNodeMarkStep.FromJSON(schema, dto),
             AttrStepDto dto => AttrStep.FromJSON(schema, dto),
+            DocAttrStepDto dto => DocAttrStep.FromJSON(schema, dto),
             _ => throw new Exception($"No step type {json.StepType} defined")
         };
     }
