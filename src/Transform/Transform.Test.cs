@@ -973,6 +973,29 @@ public class TransformTest {
 
    [Fact] public void Sets_An_Attribute() =>
      set(doc("<a>",h1("a")),"level",2,doc("<a>",h2("a")));
+
+    [Fact] public void Sets_A_Doc_Attribute() {
+        var schema = new Schema(new() {
+            Nodes = new() {
+                ["doc"] = new() {
+                    Content = "text*",
+                    Attrs = new() {
+                        ["meta"] = new() { Default = null }
+                    }
+                },
+                ["text"] = new()
+            }
+        });
+
+        var b = BuildersDynamic(schema, new() {
+            ["doc"] = new {nodeType = "doc"}
+        });
+
+        var doc = b.doc();
+        var expect = b.doc(new {meta = "hello"});
+
+        Util.testTransform(new Transform(doc).SetDocAttribute("meta", "hello"), expect);
+    }
 }
 
 public static class Util {

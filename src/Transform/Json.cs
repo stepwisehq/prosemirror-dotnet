@@ -25,6 +25,7 @@ public class StepDtoConverter : JsonConverter<StepDto>
             "addNodeMark" => typeof(AddNodeMarkStepDto),
             "removeNodeMark" => typeof(RemoveNodeMarkStepDto),
             "attr" => typeof(AttrStepDto),
+            "docAttr" => typeof(DocAttrStepDto),
             _ => throw new Exception($"No step type {typeDiscriminator} defined")
         };
 
