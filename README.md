@@ -1,7 +1,20 @@
 ProseMirror.Net
 ===============
 
-A direct translation of the core ProseMirror packages from TypeScript to C#
+> [!NOTE]  
+> This project is *not* dead! ProseMirror's core packages see very little change due to maturity; including bug fixes. ProseMirror.Net
+> powers the collaborative editing backend at [StepWiseHQ](https://stepwisehq.com).
+
+*The* best way to work with ProseMirror document models in DotNet:
+
+- Document and step DTOs for serialization/deserialization
+- Building and updating documents server-side
+- Server-side schema validation
+- Building collaborative editing backends
+
+
+
+ProseMirror.Net is a direct translation of the core ProseMirror packages from TypeScript to C#
 
 - [x] `prosemirror-model`
 - [x] `prosemirror-transform`
