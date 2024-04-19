@@ -231,7 +231,7 @@ public class NodeType {
     /// node type.</exception>
     public void CheckContent(Fragment content) {
         if (!ValidContent(content))
-            throw new Exception($"Invalid content for node {Name}: {content.ToString().Slice(0, 50)}");
+            throw new Exception($"Invalid content for node {Name}: {content.ToString().slice(0, 50)}");
     }
 
     /// <summary>Check whether the given mark type is allowed in this node.</summary>
@@ -252,7 +252,7 @@ public class NodeType {
         List<Mark>? copy = null;
         for (var i = 0; i < marks.Count; i++) {
             if (!AllowsMarkType(marks[i].Type)) {
-                copy ??= marks.Slice(0, i);
+                copy ??= marks.slice(0, i);
             } else {
                 copy?.Add(marks[i]);
             }
@@ -334,8 +334,8 @@ public class MarkType {
     /// without it is returned. Otherwise, the input set is returned.</summary>
     public List<Mark> RemoveFromSet(List<Mark> set) {
         for (var i = 0; i < set.Count; i++) if (ReferenceEquals(set[i].Type, this)) {
-            set = set.Slice(0, i);
-            set.AddRange(set.Slice(i + 1));
+            set = set.slice(0, i);
+            set.AddRange(set.slice(i + 1));
             i--;
         }
         return set;

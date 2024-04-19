@@ -132,9 +132,9 @@ public class Mapping : IMappable {
     }
 
     public Mapping Slice(int from = 0, int? to = null) =>
-        new(Maps.Slice(), Mirror?.Slice() ?? null, from, to ?? Maps.Count);
+        new(Maps.slice(), Mirror?.slice() ?? null, from, to ?? Maps.Count);
 
-    public Mapping Copy => new(Maps.Slice(), Mirror?.Slice() ?? null, From, To);
+    public Mapping Copy => new(Maps.slice(), Mirror?.slice() ?? null, From, To);
 
     public void AppendMap(StepMap map, int? mirrors = null) {
         Maps.Add(map);

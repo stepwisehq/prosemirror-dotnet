@@ -26,12 +26,12 @@ public class Mark {
             var other = set[i];
             if (Eq(other)) return set;
             if (Type.Excludes(other.Type)) {
-                copy ??= set.Slice(0, i);
+                copy ??= set.slice(0, i);
             } else if (other.Type.Excludes(Type)) {
                 return set;
             } else {
                 if (!placed && other.Type.Rank > Type.Rank) {
-                    copy ??= set.Slice(0, i);
+                    copy ??= set.slice(0, i);
                     copy.Add(this);
                     placed = true;
                 }
@@ -46,8 +46,8 @@ public class Mark {
     public List<Mark> RemoveFromSet(List<Mark> set) {
         for (var i = 0; i < set.Count; i++) {
             if (Eq(set[i])) {
-                var copy = set.Slice(0, i);
-                copy.AddRange(set.Slice(i + 1));
+                var copy = set.slice(0, i);
+                copy.AddRange(set.slice(i + 1));
                 return copy;
             }
         }

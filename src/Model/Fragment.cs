@@ -125,7 +125,7 @@ public class Fragment: IContentLike {
     public Fragment CutByIndex(int from, int to) {
         if (from == to) return Fragment.Empty;
         if (from == 0 && to == Content.Count) return this;
-        return new Fragment(Content.Slice(from, to));
+        return new Fragment(Content.slice(from, to));
     }
 
     public Fragment ReplaceChild(int index, Node node) {
@@ -229,7 +229,7 @@ public class Fragment: IContentLike {
                 && array[i - 1].SameMarkup(node)
                 && array[i - 1] is TextNode prevTextNode)
             {
-                joined ??= array.Slice(0, i);
+                joined ??= array.slice(0, i);
                 joined[^1] = textNode.WithText(prevTextNode.Text + textNode.Text);
             } else {
                 joined?.Add(node);

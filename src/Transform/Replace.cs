@@ -400,7 +400,7 @@ file class Fitter {
     }
 
     public void CloseFrontierNode() {
-        var open = Frontier.Pop();
+        var open = Frontier.pop();
         var add = open.Match.FillBefore(Fragment.Empty, true)!;
         if (add.ChildCount > 0) Placed = AddToFragment(Placed, Frontier.Count, add);
 
