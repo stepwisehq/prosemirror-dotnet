@@ -58,28 +58,19 @@ public class Fragment: IContentLike {
         });
 
         var text = new StringBuilder(estimatedStringSize);
-        var separated = true;
+        var first = true;
 
         NodesBetween(from, to, (node, pos, _, _) => {
-            if (node.IsText) {
-                var start = Math.Max(from, pos) - pos;
-                var end = Math.Min(node.Text!.Length, to - pos - start);
-                var str = node.Text!.AsSpan(start, end);
-                text.Append(str);
-                separated = blockSeparator is null;
-            } else if (node.IsLeaf) {
-                if (leafText is not null) {
-                    var str = leafText(node);
-                    text.Append(str);
-                } else if (node.Type.Spec.LeafText is not null) {
-                    var str = node.Type.Spec.LeafText(node);
-                    text.Append(str);
-                }
-                separated = blockSeparator is null;
-            } else if (!separated && node.IsBlock) {
-                text.Append(blockSeparator);
-                separated = true;
+            var nodeText = node.IsText ? node.Text!.slice(Math.Max(from, pos) - pos, to - pos)
+                : !node.IsLeaf ? ""
+                : leafText is not null ? leafText(node)
+                : node.Type.Spec.LeafText is not null ?  node.Type.Spec.LeafText(node)
+                : "";
+            if (node.IsBlock && (node.IsLeaf && nodeText.Length > 0 || node.IsTextBlock) && !string.IsNullOrEmpty(blockSeparator)) {
+                if (first) first = false;
+                else text.Append(blockSeparator);
             }
+            text.Append(nodeText);
             return true;
         }, 0);
         return text.ToString();
