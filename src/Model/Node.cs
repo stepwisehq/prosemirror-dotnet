@@ -11,9 +11,9 @@ using StepWise.Prose.Text.Json;
 namespace StepWise.Prose.Model;
 
 using OptionalAttrs = DotNext.Optional<Dictionary<string, DotNext.Optional<JsonNode>>>;
-public class NodeList : List<Node>, IContentLike {}
 
-public class Node : IContentLike {
+
+public class Node {
     public NodeType Type { get; init; }
     public Attrs Attrs { get; init; }
     public Fragment Content { get; init; } = new(new(), 0);

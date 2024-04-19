@@ -141,9 +141,9 @@ public class TransformTest {
      ist(tr.Doc.FirstChild!.Marks.Count,0);
     }
 
-    private static void ins(Node doc, Node nodes, Node expect) =>
-        ins(doc, new NodeList {nodes}, expect);
-    private static void ins(Node doc, NodeList nodes, Node expect) =>
+    private static void ins(Node doc, Node node, Node expect) =>
+        ins(doc, [node], expect);
+    private static void ins(Node doc, List<Node> nodes, Node expect) =>
         Util.testTransform(new Transform(doc).Insert(tag(doc, "a"), nodes), expect);
 
    [Fact] public void Can_Insert_A_Break() =>
@@ -158,8 +158,8 @@ public class TransformTest {
 
    [Fact] public void Can_Insert_Two_Block_Nodes() =>
       ins(doc(p("one"),"<a>",p("two<2>")),
-           new NodeList {schema.Node("paragraph",null, schema.Text("hi")),
-           schema.Node("horizontal_rule")},
+           [schema.Node("paragraph",null, schema.Text("hi")),
+           schema.Node("horizontal_rule")],
           doc(p("one"),p("hi"),hr(),"<a>",p("two<2>")));
 
    [Fact] public void Can_Insert_At_The_End_Of_A_Blockquote() =>
@@ -597,7 +597,7 @@ public class TransformTest {
 
    [Fact] public void Does_Nothing_When_Given_An_Unfittable_Slice() =>
       repl(p("<a>x"),
-           new Slice(Fragment.From(new List<Node>{blockquote(),hr()}),0,0),
+           new Slice(Fragment.From([blockquote(),hr()]),0,0),
            p("x"));
 
    [Fact] public void Doesnt_Drop_Content_When_Things_Only_Fit_At_The_Top_Level() =>
@@ -626,10 +626,10 @@ public class TransformTest {
     });
 
    [Fact] public void Preserves_Marks_On_Block_Nodes() {
-     var tr = new Transform(ms.Node("doc",null,new NodeList {
+     var tr = new Transform(ms.Node("doc",null, [
        ms.Node("paragraph",null, ms.Text("hey"),new() {ms.Mark("em")}),
        ms.Node("paragraph",null, ms.Text("ok"),new() {ms.Mark("strong")})
-     }));
+     ]));
      tr.Replace(2,7,tr.Doc.Slice(2,7));
      ist(tr.Doc,tr.Before,eq);
     }
@@ -693,10 +693,10 @@ public class TransformTest {
             .Append("doc", new() { Content = "title block*"})
      });
      var tr = new Transform(s.Node("doc",null,s.Node("title",null,s.Text("hi"))));
-     tr.Replace(1,1,s.Node("bullet_list",null,new NodeList {
+     tr.Replace(1,1,s.Node("bullet_list",null, [
        s.Node("list_item",null,s.Node("paragraph",null,s.Text("one"))),
        s.Node("list_item",null,s.Node("paragraph",null,s.Text("two")))
-     }).Slice(2,12));
+     ]).Slice(2,12));
      ist(tr.Steps.Count > 0);
     }
 
@@ -707,10 +707,10 @@ public class TransformTest {
           .Append("doc", new() { Content = "title? block*"})
       });
      var tr = new Transform(s.Node("doc",null, s.Node("title",null)));
-     tr.Replace(1,1,s.Node("doc",null, new NodeList {
+     tr.Replace(1,1,s.Node("doc",null, [
        s.Node("title",null,s.Text("title")),
        s.Node("code_block",null,s.Text("two")),
-     }).Slice(1));
+     ]).Slice(1));
      ist(tr.Steps.Count > 0);
     }
 
@@ -721,10 +721,10 @@ public class TransformTest {
          .Append("doc", new() {Content = "title? block*"})
      });
      var tr = new Transform(s.Node("doc",null,s.Node("title")));
-     tr.Replace(1,1,s.Node("doc",null, new NodeList {
+     tr.Replace(1,1,s.Node("doc",null, [
        s.Node("heading", new() {["level"] = 1}, s.Text("heading")),
        s.Node("code_block",null,s.Text("code")),
-     }).Slice(1));
+     ]).Slice(1));
      ist(tr.Steps.Count > 0);
     }
 
@@ -740,7 +740,7 @@ public class TransformTest {
       });
 
      var doc =s.Node("doc",null,
-       s.Node("block",null,new NodeList {s.Node("a",null,s.Text("aa")),s.Node("b",null,s.Text("bb"))}));
+       s.Node("block",null,[s.Node("a",null,s.Text("aa")),s.Node("b",null,s.Text("bb"))]));
      int from = 3, to = doc.Content.Size;
      ist(new Transform(doc).Replace(from,to,doc.Slice(from,to)).Doc,doc,eq);
     }
@@ -757,11 +757,11 @@ public class TransformTest {
      var doc =s.Node("doc",null,s.Node("paragraph",null,s.Text("one")));
      var iso = Fragment.From(s.Node("iso",null,s.Node("paragraph",null,s.Text("two"))));
      ist(new Transform(doc).Replace(2,3, new Slice(iso,2,0)).Doc,
-         s.Node("doc",null, new NodeList {
+         s.Node("doc",null, [
            s.Node("paragraph",null,s.Text("o")),
            s.Node("iso",null,s.Node("paragraph",null,s.Text("two"))),
            s.Node("paragraph",null,s.Text("e"))
-          }),eq);
+          ]),eq);
      ist(new Transform(doc).Replace(2,3,new Slice(iso,2,2)).Doc,
          s.Node("doc",null,s.Node("paragraph",null,s.Text("otwoe"))),eq);
     }
@@ -817,7 +817,7 @@ public class TransformTest {
             Nodes = new OrderedDictionary<string, NodeSpec>(schema.Spec.Nodes) { ["blockquote"] = spec},
             Marks = schema.Spec.Marks,
         });
-        
+
         var b = BuildersDynamic(s, new() {
             ["b1"] = new { nodeType = "blockquote", color = "#100" },
             ["b2"] = new { nodeType = "blockquote", color = "#200" },

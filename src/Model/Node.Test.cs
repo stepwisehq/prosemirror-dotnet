@@ -110,22 +110,22 @@ public class NodeTest {
    }
 
    [Fact] public void Works_With_LeafText() {
-      var d = customSchema.Nodes["doc"].CreateChecked(new(), new NodeList {
-        customSchema.Nodes["paragraph"].CreateChecked(new(), new NodeList {
+      var d = customSchema.Nodes["doc"].CreateChecked([], [
+        customSchema.Nodes["paragraph"].CreateChecked([], [
           customSchema.Text("Hello "),
           customSchema.Nodes["contact"].CreateChecked(new() {["name"] = "Alice", ["email"] = "alice@example.com" })
-        })
-      });
+        ])
+      ]);
       ist(d.TextBetween(0, d.Content.Size), "Hello Alice <alice@example.com>");
     }
 
    [Fact] public void Should_Ignore_LeafText_When_Passing_A_Custom_LeafText() {
-      var d = customSchema.Nodes["doc"].CreateChecked(new(), new NodeList {
-        customSchema.Nodes["paragraph"].CreateChecked(new(), new NodeList {
+      var d = customSchema.Nodes["doc"].CreateChecked([], [
+        customSchema.Nodes["paragraph"].CreateChecked([], [
           customSchema.Text("Hello "),
           customSchema.Nodes["contact"].CreateChecked(new() {["name"] = "Alice", ["email"] = "alice@example.com" })
-        })
-      });
+        ])
+      ]);
       ist(d.TextBetween(0,d.Content.Size, "", "<anonymous>"), "Hello <anonymous>");
     }
 
@@ -149,14 +149,14 @@ public class NodeTest {
       ist(doc(ul(li(p("hi")),li(p(em("a"),"b")))).TextContent,
           "hiab");
 
-    private static void from(IContentLike? arg, Node expect) =>
+    private static void from(ContentLike? arg, Node expect) =>
         ist(expect.Copy(Fragment.From(arg)), expect, eq);
 
    [Fact] public void Wraps_A_Single_Node() =>
       from(schema.Node("paragraph"), doc(p()));
 
    [Fact] public void Wraps_An_Array() =>
-      from(new NodeList {schema.Node("hard_break"), schema.Text("foo")}, p(br(),"foo"));
+      from([schema.Node("hard_break"), schema.Text("foo")], p(br(),"foo"));
 
    [Fact] public void Preserves_A_Fragment() =>
       from(doc(p("foo")).Content, doc(p("foo")));
@@ -165,7 +165,7 @@ public class NodeTest {
       from(null,p());
 
    [Fact] public void Joins_Adjacent_Text() =>
-      from(new NodeList {schema.Text("a"),schema.Text("b")}, p("ab"));
+      from([schema.Text("a"),schema.Text("b")], p("ab"));
 
     private static void roundTrip(Node doc) =>
         ist(schema.NodeFromJSON(doc.ToJSON()), doc, eq);
@@ -196,7 +196,7 @@ public class NodeTest {
 
    [Fact] public void Should_Custom_The_TextContent_Of_A_Leaf_Node() {
       var contact = customSchema.Nodes["contact"].CreateChecked(new() {["name"] = "Bob", ["email"] = "bob@example.com" });
-      var paragraph = customSchema.Nodes["paragraph"].CreateChecked(new(), new NodeList {customSchema.Text("Hello "), contact});
+      var paragraph = customSchema.Nodes["paragraph"].CreateChecked([], [customSchema.Text("Hello "), contact]);
 
       ist(contact.TextContent,"Bob <bob@example.com>");
       ist(paragraph.TextContent,"Hello Bob <bob@example.com>");

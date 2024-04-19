@@ -281,14 +281,14 @@ public record Expression {
                 var loop = node();
                 edge(from, loop);
                 connect(compile(star.expr, loop), loop);
-                return new List<Edge>() {edge(loop)};
+                return [edge(loop)];
             } else if (_expr is Plus plus) {
                 var loop = node();
                 connect(compile(plus.expr, from), loop);
                 connect(compile(plus.expr, loop), loop);
-                return new List<Edge>() {edge(loop)};
+                return [edge(loop)];
             } else if (_expr is Optional option) {
-                return new List<Edge>() {edge(from)}.Concat(compile(option.expr, from)).ToList();
+                return [edge(from), ..compile(option.expr, from)];
             } else if (_expr is Range range) {
                 var cur = from;
                 for (var i = 0; i < range.min; i++) {
@@ -306,9 +306,9 @@ public record Expression {
                         cur = next;
                     }
                 }
-                return new List<Edge>() {edge(cur)};
+                return [edge(cur)];
             } else if (_expr is Name name) {
-                return new List<Edge>() {edge(from, null, name.value)};
+                return [edge(from, null, name.value)];
             } else {
                 throw new Exception("Unknown expression type");
             }

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 using DotNext;
@@ -7,9 +9,29 @@ using StepWise.Prose.Collections;
 
 namespace StepWise.Prose.Model;
 
-public interface IContentLike {}
 
-public class Fragment: IContentLike {
+internal static class ContentLikeBuilder {
+	internal static ContentLike Create(ReadOnlySpan<Node> nodes) => new ContentLike { Content = nodes.ToArray().ToList() };
+}
+
+[CollectionBuilder(typeof(ContentLikeBuilder), "Create")]
+public class ContentLike : IEnumerable<Node> {
+    public required object Content { get; init; }
+
+    public static implicit operator ContentLike(List<Node> nodes) => new() { Content = nodes };
+    public static implicit operator ContentLike(Node node) => new() { Content = node };
+    public static implicit operator ContentLike(Fragment fragment) => new() { Content = fragment };
+
+    public IEnumerator<Node> GetEnumerator() => (IEnumerator<Node>)(IEnumerable)this.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() {
+        if (Content is Node[] stuff)
+            return stuff.GetEnumerator();
+        else
+            throw new Exception("This content is not a node list!");
+    }
+}
+
+public class Fragment {
     public List<Node> Content { get; init; }
     public int Size { get; init; }
 
@@ -229,18 +251,20 @@ public class Fragment: IContentLike {
         return new Fragment(joined ?? array, size);
     }
 
-    public static Fragment From(IContentLike? content) {
+    public static Fragment From(ContentLike? content) {
         if (content is null) return Empty;
-        return content switch {
+        return content.Content switch {
             Fragment fragment => fragment,
             Node node => From(node),
             List<Node> nodes => From(nodes),
+            null => Empty,
             _ => throw new Exception($"Can't convert {content} to a fragment")
         };
     }
+
     public static Fragment From(Fragment? fragment) => fragment ?? Empty;
     public static Fragment From(List<Node>? nodes) => nodes is null ? Empty : FromArray(nodes);
-    public static Fragment From(Node? node) => node is null ? Empty : new(new List<Node> {node}, node.NodeSize);
+    public static Fragment From(Node? node) => node is null ? Empty : new([node], node.NodeSize);
 
 
     public static int? FindDiffStart(Fragment a, Fragment b, int pos) {

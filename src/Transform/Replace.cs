@@ -395,7 +395,7 @@ file class Fitter {
     public void OpenFrontierNode(NodeType type, Attrs? attrs = null, Fragment? content = null) {
         var top = Frontier.ElementAt(Depth);
         top.Match = top.Match.MatchType(type)!;
-        Placed = AddToFragment(Placed, Depth, Fragment.From(type.Create(attrs, content)));
+        Placed = AddToFragment(Placed, Depth, Fragment.From(type.Create(attrs, content!)));
         Frontier.Add(new(type, type.ContentMatch));
     }
 

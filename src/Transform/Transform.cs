@@ -57,7 +57,7 @@ public class Transform {
         return this;
     }
 
-    public Transform ReplaceWith(int from, int to, IContentLike content) {
+    public Transform ReplaceWith(int from, int to, ContentLike content) {
         return Replace(from, to, new Slice(Fragment.From(content), 0, 0));
     }
 
@@ -65,7 +65,7 @@ public class Transform {
         return Replace(from, to, Slice.Empty);
     }
 
-    public Transform Insert(int pos, IContentLike content) {
+    public Transform Insert(int pos, ContentLike content) {
         return ReplaceWith(pos, pos, content);
     }
 

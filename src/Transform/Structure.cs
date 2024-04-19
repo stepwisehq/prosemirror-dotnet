@@ -126,7 +126,7 @@ public static class Structure {
                 var startM = mapping.Map(pos, 1);
                 var endM = mapping.Map(pos + node.NodeSize, 1);
                 tr.Step(new ReplaceAroundStep(startM, endM, startM + 1, endM - 1,
-                                                new Slice(Fragment.From(type.Create(attrs, (Node?)null, node.Marks)), 0, 0), 1, true));
+                                                new Slice(Fragment.From(type.Create(attrs, null, node.Marks)), 0, 0), 1, true));
                 return false;
             }
             return true;
@@ -144,7 +144,7 @@ public static class Structure {
         var node = tr.Doc.NodeAt(pos);
         if (node is null) throw new Exception("No node at given position");
         type ??= node.Type;
-        var newNode = type.Create(attrs, null as Node, marks ?? node.Marks);
+        var newNode = type.Create(attrs, null, marks ?? node.Marks);
         if (node.IsLeaf)
             return tr.ReplaceWith(pos, pos + node.NodeSize, newNode);
 
