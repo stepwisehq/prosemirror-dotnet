@@ -12,13 +12,13 @@ namespace StepWise.Prose.SchemaBasic;
 public static class BasicSchema {
     /// [Specs](#model.NodeSpec) for the nodes defined in this schema.
     public static OrderedDictionary<string, NodeSpec> Nodes { get; } = new() {
-        /// NodeSpec The top level document node.
+        // NodeSpec The top level document node.
         ["doc"] =  new() {
             Content = "block+"
         },
 
-        /// A plain paragraph textblock. Represented in the DOM
-        /// as a `<p>` element.
+        // A plain paragraph textblock. Represented in the DOM
+        // as a `<p>` element.
         ["paragraph"] =  new() {
             Content = "inline*",
             Group = "block",
@@ -26,7 +26,7 @@ public static class BasicSchema {
             // ToDOM()  new() { return pDOM }
         },
 
-        /// A blockquote (`<blockquote>`) wrapping one or more blocks.
+        // A blockquote (`<blockquote>`) wrapping one or more blocks.
         ["blockquote"] =  new() {
             Content = "block+",
             Group = "block",
@@ -35,16 +35,16 @@ public static class BasicSchema {
             // ToDOM()  new() { return blockquoteDOM }
         },
 
-        /// A horizontal rule (`<hr>`).
+        // A horizontal rule (`<hr>`).
         ["horizontal_rule"] =  new() {
             Group = "block",
             // ParseDOM = [ new() {tag = "hr"}],
             // toDOM()  new() { return hrDOM }
         },
 
-        /// A heading textblock, with a `level` attribute that
-        /// should hold the number 1 to 6. Parsed and serialized as `<h1>` to
-        /// `<h6>` elements.
+        // A heading textblock, with a `level` attribute that
+        // should hold the number 1 to 6. Parsed and serialized as `<h1>` to
+        // `<h6>` elements.
         ["heading"] =  new() {
             Attrs =  new() {["level"] =  new() {Default = new(1)}},
             Content = "inline*",
@@ -59,9 +59,9 @@ public static class BasicSchema {
             // toDOM(node)  new() { return ["h" + node.attrs.level, 0] }
         },
 
-        /// A code listing. Disallows marks or non-text inline
-        /// nodes by default. Represented as a `<pre>` element with a
-        /// `<code>` element inside of it.
+        // A code listing. Disallows marks or non-text inline
+        // nodes by default. Represented as a `<pre>` element with a
+        // `<code>` element inside of it.
         ["code_block"] =  new() {
             Content = "text*",
             Marks = "",
@@ -72,14 +72,14 @@ public static class BasicSchema {
             // toDOM()  new() { return preDOM }
         },
 
-        /// The text node.
+        // The text node.
         ["text"] =  new() {
             Group = "inline"
         },
 
-        /// An inline image (`<img>`) node. Supports `src`,
-        /// `alt`, and `href` attributes. The latter two default to the empty
-        /// string.
+        // An inline image (`<img>`) node. Supports `src`,
+        // `alt`, and `href` attributes. The latter two default to the empty
+        // string.
         ["image"] =  new() {
             Inline = true,
             Attrs =  new() {
@@ -99,7 +99,7 @@ public static class BasicSchema {
             // toDOM(node)  new() { let  new() {src, alt, title} = node.attrs; return ["img",  new() {src, alt, title}] }
         },
 
-        /// A hard line break, represented in the DOM as `<br>`.
+        // A hard line break, represented in the DOM as `<br>`.
         ["hard_break"] =  new() {
             Inline = true,
             Group = "inline",
@@ -113,9 +113,9 @@ public static class BasicSchema {
 
     /// [Specs](#model.MarkSpec) for the marks in the schema.
     public static OrderedDictionary<string, MarkSpec> Marks { get; } = new() {
-        /// A link. Has `href` and `title` attributes. `title`
-        /// defaults to the empty string. Rendered and parsed as an `<a>`
-        /// element.
+        // A link. Has `href` and `title` attributes. `title`
+        // defaults to the empty string. Rendered and parsed as an `<a>`
+        // element.
         ["link"] = new() {
             Attrs = new() {
                 ["href"] = new() {},
@@ -128,8 +128,8 @@ public static class BasicSchema {
             // toDOM(node) new() { let new() {href, title} = node.attrs; return ["a", new() {href, title}, 0] }
         },
 
-        /// An emphasis mark. Rendered as an `<em>` element. Has parse rules
-        /// that also match `<i>` and `font-style = italic`.
+        // An emphasis mark. Rendered as an `<em>` element. Has parse rules
+        // that also match `<i>` and `font-style = italic`.
         ["em"] = new() {
             // parseDOM = [
             //     new() {tag = "i"}, new() {tag = "em"},
@@ -139,8 +139,8 @@ public static class BasicSchema {
             // toDOM() new() { return emDOM }
         },
 
-        /// A strong mark. Rendered as `<strong>`, parse rules also match
-        /// `<b>` and `font-weight = bold`.
+        // A strong mark. Rendered as `<strong>`, parse rules also match
+        // `<b>` and `font-weight = bold`.
         ["strong"] = new() {
             // parseDOM = [
             //     new() {tag = "strong"},
@@ -154,7 +154,7 @@ public static class BasicSchema {
             // toDOM() new() { return strongDOM }
         },
 
-        /// Code font mark. Represented as a `<code>` element.
+        // Code font mark. Represented as a `<code>` element.
         ["code"] = new() {
             // parseDOM = [new() {tag = "code"}],
             // toDOM() new() { return codeDOM }
@@ -167,11 +167,11 @@ public static class BasicSchema {
     });
 }
 
-/// This schema roughly corresponds to the document schema used by
-/// [CommonMark](http://commonmark.org/), minus the list elements,
-/// which are defined in the [`prosemirror-schema-list`](#schema-list)
-/// module.
-///
-/// To reuse elements from this schema, extend or read from its
-/// `spec.nodes` and `spec.marks` [properties](#model.Schema.spec).
+// This schema roughly corresponds to the document schema used by
+// [CommonMark](http://commonmark.org/), minus the list elements,
+// which are defined in the [`prosemirror-schema-list`](#schema-list)
+// module.
+//
+// To reuse elements from this schema, extend or read from its
+// `spec.nodes` and `spec.marks` [properties](#model.Schema.spec).
 // export const schema = new Schema({nodes, marks})
