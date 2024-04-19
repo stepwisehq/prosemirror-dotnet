@@ -129,6 +129,15 @@ public class NodeTest {
       ist(d.TextBetween(0,d.Content.Size, "", "<anonymous>"), "Hello <anonymous>");
     }
 
+    [Fact] public void Adds_Block_Separator_Around_Empty_Paragraphs() =>
+      ist(doc(p("one"), p(), p("two")).TextBetween(0, 12, "\n"), "one\n\ntwo");
+
+    [Fact] public void Adds_Block_Separator_Around_Leaf_Nodes() =>
+      ist(doc(p("one"), hr(), hr(), p("two")).TextBetween(0, 12, "\n", "---"), "one\n---\n---\ntwo");
+
+    [Fact] public void Doesnt_Add_Block_Separator_Around_NonRendered_Leaf_Nodes() =>
+      ist(doc(p("one"), hr(), hr(), p("two")).TextBetween(0, 12, "\n"), "one\ntwo");
+
 
    [Fact] public void Works_On_A_Whole_Doc() =>
       ist(doc(p("foo")).TextContent,"foo");
