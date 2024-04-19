@@ -222,7 +222,7 @@ public class Node : IContentLike {
             Type = Type.Name,
             Attrs = attrs is not null ? attrs : OptionalAttrs.None,
             Content = Content?.ChildCount > 0 ? Content.ToJSON() : DotNext.Optional<List<NodeDto>>.None,
-            Marks = Marks.Select(m => m.ToJSON()).ToList(),
+            Marks = Marks.Count > 0 ? Marks.Select(m => m.ToJSON()).ToList() : DotNext.Optional<List<MarkDto>>.None,
             Text = DotNext.Optional<string>.None,
         };
     }
@@ -278,7 +278,7 @@ public class TextNode : Node {
     public override TextNode Cut(int from = 0, int? to = null) {
         var _to = to ?? Text.Length;
         if (from == 0 && to == Text.Length) return this;
-        return WithText(Text.Slice(from, _to));
+        return WithText(Text.slice(from, _to));
     }
 
     public override bool Eq(Node other) {

@@ -54,7 +54,7 @@ public static class Collab {
             var mapped = step!.Map(sliced)!;
             mapFrom--;
             if (mapped is not null && tr.MaybeStep(mapped).Failed is null) {
-                mapping.AppendMapping(new (tr.Mapping.Maps.Slice(tr.Steps.Count - 1)));
+                mapping.AppendMapping(new (tr.Mapping.Maps.slice(tr.Steps.Count - 1)));
                 // Set mirror so positions can be recovered properly. Without this a Replace.To
                 // that landed in a position created by a predecessor would not get mapped back to the correct
                 // position.
