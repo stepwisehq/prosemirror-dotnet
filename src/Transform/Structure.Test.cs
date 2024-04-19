@@ -99,10 +99,10 @@ public class StructureTest {
         nodes.SetValue("doc", new() {Content = "chapter+"});
 
         var s = new Schema(new() {Nodes = nodes});
-        CanSplit(s.Node("doc", null, s.Node("chapter", null, new NodeList() {
+        CanSplit(s.Node("doc", null, s.Node("chapter", null, [
             s.Node("title", null, s.Text("title")),
             s.Node("scene", null, s.Node("para", null, s.Text("scene")))
-        })), 4, 1, new(){new(s.Nodes["scene"], null)}).Should().BeFalse();
+        ])), 4, 1, new(){new(s.Nodes["scene"], null)}).Should().BeFalse();
     }
 
     private static void yesLift(int pos) {

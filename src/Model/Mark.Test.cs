@@ -160,17 +160,17 @@ public class MarkTest {
    [Fact] public void Notices_That_Attributes_Differ() =>
       isAt(doc(p(a("li<a>nk"))),link("http://baz", null),false);
 
-    private static Node customDoc { get; } = customSchema.Node("doc", null, new NodeList{
-        customSchema.Node("paragraph", null, new NodeList{ // pos 1
+    private static Node customDoc { get; } = customSchema.Node("doc", null, [
+        customSchema.Node("paragraph", null, [ // pos 1
             customSchema.Text("one", new MarkList{remark1, customStrong}), customSchema.Text("two"),
-        }),
-        customSchema.Node("paragraph", null, new NodeList{ // pos 9
+        ]),
+        customSchema.Node("paragraph", null, [ // pos 9
             customSchema.Text("one"), customSchema.Text("two", new() {remark1}), customSchema.Text("three", new() {remark1} )
-        }), // pos 22
-        customSchema.Node("paragraph", null, new NodeList{
+        ]), // pos 22
+        customSchema.Node("paragraph", null, [
             customSchema.Text("one", new() {remark2}), customSchema.Text("two", new() {remark1})
-        })
-    });
+        ])
+    ]);
 
    [Fact] public void Omits_Non_Inclusive_Marks_At_End_Of_Mark() =>
       ist(Mark.SameSet(customDoc.Resolve(4).Marks(),new() {customStrong}));

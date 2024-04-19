@@ -1,7 +1,7 @@
 ProseMirror.Net
 ===============
 
-> [!NOTE]  
+> [!NOTE]
 > This project is *not* dead! ProseMirror's core packages see very little change due to maturity; including bug fixes. ProseMirror.Net
 > powers the collaborative editing backend at [StepWiseHQ](https://stepwisehq.com).
 
@@ -45,11 +45,11 @@ var schemaSpec = new SchemaSpec() {
 };
 var schema = new Schema(schemaSpec);
 
-var doc = schema.Node("doc", null, new NodeList {
-	schema.Node("paragraph", null, new NodeList {
+var doc = schema.Node("doc", null, [
+	schema.Node("paragraph", null, [
 		schema.Text("Hello World")
-	}, null)
-}, null);
+	], null)
+], null);
 
 Console.WriteLine(doc.ToString()); // doc(paragraph("Hello World"))
 ```

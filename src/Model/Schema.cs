@@ -177,33 +177,27 @@ public class NodeType {
     /// may be a <c>Fragment</c>, a node, an array of nodes, or
     /// <c>null</c>. Similarly <c>marks</c> may be <c>null</c> to default to the empty
     /// set of marks.</summary>
-    public Node Create(Attrs? attrs, List<Node> content, List<Mark>? marks = null) {
+    public Node Create(Attrs? attrs = null, ContentLike? content = null, List<Mark>? marks = null) {
         if (IsText) throw new Exception("NodeType.Create can't construct text nodes");
         return new Node(this, ComputeAttrs(attrs), Fragment.From(content), Mark.SetFrom(marks!));
     }
 
-    /// <inheritdoc cref="Create(Attrs?, List{Node}, List{Mark}?)"/>
-    public Node Create(Attrs? attrs = null, IContentLike? content = null, List<Mark>? marks = null) {
-        if (IsText) throw new Exception("NodeType.Create can't construct text nodes");
-        return new Node(this, ComputeAttrs(attrs), Fragment.From(content), Mark.SetFrom(marks!));
-    }
-
-    /// <summary>Like <see cref="Create(Attrs?, List{Node}, List{Mark}?)"><c>Create</c></see>, but check the given content
+    /// <summary>Like <see cref="Create(Attrs?, ContentLike?, List{Mark}?)"><c>Create</c></see>, but check the given content
     /// against the node type's content restrictions, and throw an error
     /// if it doesn't match.</summary>
-    public Node CreateChecked(Attrs? attrs = null, IContentLike? content = null, List<Mark>? marks = null) {
+    public Node CreateChecked(Attrs? attrs = null, ContentLike? content = null, List<Mark>? marks = null) {
         var _content = Fragment.From(content);
         CheckContent(_content);
         return new Node(this, ComputeAttrs(attrs), _content, Mark.SetFrom(marks));
     }
 
-    /// <summary>Like <see cref="Create(Attrs?, List{Node}, List{Mark}?)"><c>Create</c></see>, but see if it is
+    /// <summary>Like <see cref="Create(Attrs?, ContentLike?, List{Mark}?)"><c>Create</c></see>, but see if it is
     /// necessary to add nodes to the start or end of the given fragment
     /// to make it fit the node. If no fitting wrapping can be found,
     /// return null. Note that, due to the fact that required nodes can
     /// always be created, this will always succeed if you pass null or
     /// <c>Fragment.Empty</c> as content.</summary>
-    public Node? CreateAndFill(Attrs? attrs = null, IContentLike? content = null, List<Mark>? marks = null) {
+    public Node? CreateAndFill(Attrs? attrs = null, ContentLike? content = null, List<Mark>? marks = null) {
         var _attrs = ComputeAttrs(attrs);
         var _content = Fragment.From(content);
         if (_content.Size > 0) {
@@ -591,7 +585,7 @@ public class Schema {
     public Node Node(
         OneOf<string, NodeType> type,
         Attrs? attrs = null,
-        IContentLike? content = null,
+        ContentLike? content = null,
         List<Mark>? marks = null)
     {
         var _type = type.Match(

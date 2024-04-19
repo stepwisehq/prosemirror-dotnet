@@ -20,7 +20,7 @@ public class AttrStep : Step {
         var node = doc.NodeAt(Pos);
         if (node is null) return StepResult.Fail("No node at attribute step's position");
         var attrs = new Attrs(node.Attrs) { [Attr] = Value };
-        var updated = node.Type.Create(attrs, (Node?)null, node.Marks);
+        var updated = node.Type.Create(attrs, null, node.Marks);
         return StepResult.FromReplace(doc, Pos, Pos + 1, new Slice(Fragment.From(updated), 0, node.IsLeaf ? 0 : 1));
     }
 

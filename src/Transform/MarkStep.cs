@@ -130,7 +130,7 @@ public class AddNodeMarkStep : Step {
     public override StepResult Apply(Node doc) {
         var node = doc.NodeAt(Pos);
         if (node is null) return StepResult.Fail("No node at mark step's position");
-        var updated = node.Type.Create(node.Attrs, (Node?)null, Mark.AddToSet(node.Marks));
+        var updated = node.Type.Create(node.Attrs, null, Mark.AddToSet(node.Marks));
         return StepResult.FromReplace(doc, Pos, Pos + 1, new Slice(Fragment.From(updated), 0, node.IsLeaf ? 0 : 1));
     }
 
@@ -175,7 +175,7 @@ public class RemoveNodeMarkStep : Step {
     public override StepResult Apply(Node doc) {
         var node = doc.NodeAt(Pos);
         if (node is null) return StepResult.Fail("No node at mark step's position");
-        var updated = node.Type.Create(node.Attrs, (Node?)null, Mark.RemoveFromSet(node.Marks));
+        var updated = node.Type.Create(node.Attrs, null, Mark.RemoveFromSet(node.Marks));
         return StepResult.FromReplace(doc, Pos, Pos + 1, new Slice(Fragment.From(updated), 0, node.IsLeaf ? 0 : 1));
     }
 
