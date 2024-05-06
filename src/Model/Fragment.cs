@@ -239,6 +239,7 @@ public class Fragment {
             size += node.NodeSize;
             if (i > 0 && node.IsText
                 && node is TextNode textNode
+                && array[i - 1] is TextNode
                 && array[i - 1].SameMarkup(node))
             {
                 joined ??= array.slice(0, i);
