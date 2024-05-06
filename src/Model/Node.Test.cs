@@ -194,6 +194,12 @@ public class NodeTest {
         ).ToString(),
         "<custom_text, custom_hard_break, custom_text>");
 
+   [Fact] public void Should_Concatenate_TextNode_FromArray() =>
+      ist(Fragment.FromArray(
+          new() {customSchema.Text("-"),customSchema.Text(" "),customSchema.Text("hello world")}
+        ).Child(0).TextContent,
+        "- hello world");
+
    [Fact] public void Should_Custom_The_TextContent_Of_A_Leaf_Node() {
       var contact = customSchema.Nodes["contact"].CreateChecked(new() {["name"] = "Bob", ["email"] = "bob@example.com" });
       var paragraph = customSchema.Nodes["paragraph"].CreateChecked([], [customSchema.Text("Hello "), contact]);
