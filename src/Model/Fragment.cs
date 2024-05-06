@@ -239,11 +239,10 @@ public class Fragment {
             size += node.NodeSize;
             if (i > 0 && node.IsText
                 && node is TextNode textNode
-                && array[i - 1].SameMarkup(node)
-                && array[i - 1] is TextNode prevTextNode)
+                && array[i - 1].SameMarkup(node))
             {
                 joined ??= array.slice(0, i);
-                joined[^1] = textNode.WithText(prevTextNode.Text + textNode.Text);
+                joined[^1] = textNode.WithText(joined[^1].Text + textNode.Text);
             } else {
                 joined?.Add(node);
             }
